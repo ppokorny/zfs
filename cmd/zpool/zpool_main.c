@@ -5148,6 +5148,7 @@ print_zpool_script_list(char *subcommand)
 /*
  * Set the minimum pool/vdev name column width.  The width must be at least 10,
  * but may be as large as the column width - 42 so it still fits on one line.
+ * NOTE: 42 is the width of the default capacity/operations/bandwidth output
  */
 static int
 get_namewidth_iostat(zpool_handle_t *zhp, void *data)
@@ -5159,10 +5160,10 @@ get_namewidth_iostat(zpool_handle_t *zhp, void *data)
 	    cb->cb_verbose);
 	columns = get_columns();
 
+	if (columns > 42+10 && width > columns - 42)
+		width = columns - 42;
 	if (width < 10)
 		width = 10;
-	if (width > columns - 42)
-		width = columns - 42;
 
 	cb->cb_namewidth = width;
 
